@@ -30,13 +30,14 @@ func AddDebugContainerPodTemplate(template corev1.PodTemplateSpec, namespace, co
 	}
 
 	if len(template.Spec.Containers) > 1 {
-		for _, c := range template.Spec.Containers {
+		for i, c := range template.Spec.Containers {
 			if c.Name == containerToDebug {
 				if !existingVolume {
 					c.VolumeMounts = append(c.VolumeMounts, corev1.VolumeMount{
 						Name:      tmpVolume.Name,
 						MountPath: "/tmp",
 					})
+					template.Spec.Containers[i].VolumeMounts = c.VolumeMounts
 				}
 			}
 		}
